@@ -16,19 +16,19 @@ public class Gasto {
     public void setDescricao(String descricao){
         this.descricao = descricao;
     }
-    public BigDecimal getvalor(){
+    public BigDecimal getValor(){
         return valor;
     }
     public void setValor(BigDecimal valor){
         this.valor = valor;
     }
-    public LocalDate getdata(){
+    public LocalDate getData(){
         return data;
     }
     public void setData(LocalDate data){
         this.data = data;
     }
-    public String getcategoria(){
+    public String getCategoria(){
         return categoria;
     }
     public void setCategoria(String categoria){
