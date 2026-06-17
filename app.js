@@ -7,6 +7,7 @@ function carregarGastos() {
         })
         .then(function(dados) { // dados é oq retorna no console do json
             const lista = document.getElementById('listaGastos')
+            lista.innerHTML = ''
             if(dados.length == 0) {
                 lista.innerHTML = 'Nenhum gasto cadastrado ainda.'
             }else {
