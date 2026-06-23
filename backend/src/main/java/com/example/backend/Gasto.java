@@ -5,11 +5,18 @@ import java.time.LocalDate;
 
 public class Gasto {
 
+    private String id;
     private String descricao;
     private BigDecimal valor;
     private LocalDate data;
     private String categoria;
 
+    public String getId(){
+        return id;
+    }
+    public void setId(String id){
+        this.id = id;
+    }
     public String getDescricao(){
         return descricao;
     }
