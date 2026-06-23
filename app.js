@@ -3,20 +3,29 @@
 
 function carregarGastos() {
 
+    let total = 0
+
     fetch('http://localhost:8080/gastos')
         .then(function(resposta) { // cria variavel resposta e retorna com a resposta do /gastos
             return resposta.json()
         })
         .then(function(dados) { // dados é oq retorna no console do json
             const lista = document.getElementById('listaGastos') // lista = lista do html, gastos, desc e etc
+            const totalValor = document.getElementById('totalGastos') // totalValor = aba de gastos no html
+            const qntd = document.getElementById('qtdGastos') // qntd = quantidade no html
             lista.innerHTML = '' // impede duplicacao de informacoes
             if(dados.length == 0) { // se nao tiver nenhum dado inserido retorna isso
                 lista.innerHTML = 'Nenhum gasto cadastrado ainda.'
+                totalValor.innerHTML = 'R$ ' + 0 // + 0 pra ele nao bugar e ficar com o valor do ultimo item, ja que se dados for 0 é pq nao tem dado, entao valor e 0
+                qntd.innerHTML = 0
             }else {
                 dados.forEach(function (gasto) { // se tiver dado inserido retorna com os dados que foram colocados
+                    total = total + gasto.valor // total = total mais o valor inserido
                     console.log(gasto)
                     lista.innerHTML += `<p><button onclick="deletarGastos('${gasto.id}')">Apagar</button> ${gasto.descricao} -- R$ ${gasto.valor} -- ${gasto.categoria} -- ${gasto.data}</p>`
                 })
+                qntd.innerHTML = dados.length
+                totalValor.innerHTML = 'R$ ' + total // mudar escrita do html para o total somado ali em cima
             }
         })
 
