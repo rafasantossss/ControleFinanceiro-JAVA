@@ -31,4 +31,16 @@ public class GastoController {
     public void deletar(@PathVariable String id) { // método que recebe da URL o valor no lugar de {id} e guarda na variável id
         gastos.removeIf(gasto -> gasto.getId().equals(id)); // pega o que veio escrito no lugar do {id} da URL e guarda na variável id
     }
+    @PutMapping("/gastos/{id}")
+    public void salvarEdicao(@PathVariable String id, @RequestBody Gasto gastoAtualizado) {
+        gastos.forEach(gasto -> {
+            if (gasto.getId().equals(id)) {
+                gasto.setDescricao(gastoAtualizado.getDescricao());
+                gasto.setValor(gastoAtualizado.getValor());
+                gasto.setCategoria(gastoAtualizado.getCategoria());
+                gasto.setData(gastoAtualizado.getData());
+
+            }
+        });
+    }
 }
