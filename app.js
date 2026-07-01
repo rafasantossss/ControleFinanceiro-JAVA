@@ -72,7 +72,11 @@
     function editarGastos(id, descricao, valor, categoria, data) {
         const linha = document.getElementById(id)
         linha.className = 'edit-row' // troca a classe do elemento pra estilizar como linha de edicao
-        linha.innerHTML = `<input id="edit-desc" type="text" value="${descricao}"><input id="edit-valor" type="number" value="${valor}"><select id="edit-categoria" ><option value="ALIMENTACAO" ${categoria === 'ALIMENTACAO' ? 'selected' : ''}>🍔 Alimentação</option> <option value="TRANSPORTE" ${categoria === 'TRANSPORTE' ? 'selected' : ''}>🚌 Transporte</option> <option value="LAZER" ${categoria === 'LAZER' ? 'selected' : ''}>🎮 Lazer</option> <option value="OUTROS" ${categoria === 'OUTROS' ? 'selected' : ''}>📦 Outros</option></select><input id="edit-data" type="date" value="${data}"><button class="btn-salvar-edit" onclick="salvarEdicao('${id}')">Salvar</button>`
+        linha.innerHTML = `<input id="edit-desc" type="text" value="${descricao}">
+                            <input id="edit-valor" type="number" value="${valor}">
+                            <select id="edit-categoria" ><option value="ALIMENTACAO" ${categoria === 'ALIMENTACAO' ? 'selected' : ''}>🍔 Alimentação</option> <option value="TRANSPORTE" ${categoria === 'TRANSPORTE' ? 'selected' : ''}>🚌 Transporte</option> <option value="LAZER" ${categoria === 'LAZER' ? 'selected' : ''}>🎮 Lazer</option> <option value="OUTROS" ${categoria === 'OUTROS' ? 'selected' : ''}>📦 Outros</option></select>
+                            <input id="edit-data" type="date" value="${data}">
+                            <button class="btn-salvar-edit" onclick="salvarEdicao('${id}')">Salvar</button>`
     }
 
     function salvarEdicao(id) {
@@ -128,7 +132,7 @@
 
                 const labels = Object.keys(totais) // nomes das categorias
                 const valores = Object.values(totais) // valores de cada categoria
-                const cores = ['#d4af37', '#ff6b6b', '#6bcbff', '#a8ff78', '#ffb347'] // cores do grafico
+                const cores = ['#0045ff', '#7a00ff', '#bde8ff', '#00ff70', '#ffb347'] // cores do grafico
 
                 if (window._grafico) window._grafico.destroy() // destroi o grafico anterior pra nao duplicar
 
