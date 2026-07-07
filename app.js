@@ -31,7 +31,7 @@ function carregarGastos() {
 
     let total = 0
 
-    fetch('http://localhost:8080/gastos')
+    fetch('https://controlefinanceiro-java-production.up.railway.app/gastos')
         .then(function(resposta) { // cria variavel resposta e retorna com a resposta do /gastos
             return resposta.json()
         })
@@ -83,7 +83,7 @@ function salvarEdicao(id) {
         data: document.getElementById('edit-data').value,
     }
 
-    fetch('http://localhost:8080/gastos/' + id, {
+    fetch('https://controlefinanceiro-java-production.up.railway.app/gastos/' + id, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'  // Avisando que é um pacote JSON
@@ -95,7 +95,7 @@ function salvarEdicao(id) {
 }
 
 function deletarGastos(id) {
-    fetch('http://localhost:8080/gastos/' + id, { // aqui ele fala que o localhost /gastos vai adicionar o id do item, ou seja /gastos/1
+    fetch('https://controlefinanceiro-java-production.up.railway.app/gastos/' + id, { // aqui ele fala que o localhost /gastos vai adicionar o id do item, ou seja /gastos/1
         method: 'DELETE' // metodo que ele espera
     })
         .then(function() { // entao sempre que o fetch terminar ele executa funcao
@@ -105,7 +105,7 @@ function deletarGastos(id) {
 
 // desenha o grafico de pizza com os gastos agrupados por categoria
 function desenharGrafico() {
-    fetch('http://localhost:8080/gastos')
+    fetch('https://controlefinanceiro-java-production.up.railway.app/gastos')
         .then(function(r) { return r.json() })
         .then(function(dados) {
             const vazio = document.getElementById('graficoVazio')
@@ -174,7 +174,7 @@ window.onload = function() { // quando a pagina carrega ele chama funcao carrega
         }; //cria objeto puxando valores de cada id do html // .value serve para extrair exatamente o texto que o usuário digitou
            //no final tudo é agrupado dentro da variavel pacoteGasto
 
-        fetch('http://localhost:8080/gastos', { // fetch executa a chamada de rede para o backend.
+        fetch('https://controlefinanceiro-java-production.up.railway.app/gastos', { // fetch executa a chamada de rede para o backend.
             method: 'POST', // metodo que ele espera
             headers: {
                 'Content-Type': 'application/json'  // Avisando que é um pacote JSON
