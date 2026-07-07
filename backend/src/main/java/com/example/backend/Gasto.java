@@ -1,15 +1,26 @@
+//define a ESTRUTURA da tabela
+
 package com.example.backend;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Entity // cria tabela e diz pro banco de dados que e uma tabela com todas as variaveis da classe
 public class Gasto {
 
+    @Id //Diz qual campo é a chave primária ou seja, id
+    @GeneratedValue(strategy = GenerationType.UUID) // Diz pro banco gerar o id automaticamente usando UUID
     private String id;
     private String descricao;
     private BigDecimal valor;
     private LocalDate data;
     private String categoria;
+
 
     public String getId(){
         return id;
