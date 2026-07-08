@@ -4,83 +4,134 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Meu Financeiro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="tab-home" class="tab active">
-    <div class="home-header">
-        <div class="coins-icon">◈</div>
-        <div class="total-display">
-            <span class="total-value" id="totalGastos">R$ 0,00</span>
-            <span class="total-label"><span id="qtdGastos">0</span> gastos registrados</span>
+<div class="app-layout">
+    <aside class="sidebar desktop-only liquid-glass">
+        <div class="sidebar-brand">
+            <div class="brand-icon">◈</div>
+            <span>Financeiro</span>
         </div>
-    </div>
+        <nav class="sidebar-nav">
+            <button class="nav-btn active" onclick="trocarAba('home', this)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                Início
+            </button>
+            <button class="nav-btn" onclick="trocarAba('chart', this)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                Métricas
+            </button>
+        </nav>
+        <button class="btn-primary sidebar-fab" onclick="abrirModal()">Novo Gasto</button>
+    </aside>
 
-    <div class="sheet liquid-glass">
-        <div class="sheet-title">Atividade Recente</div>
-        <div id="listaGastos" class="lista-gastos">
-            <p class="vazio">Nenhum gasto cadastrado ainda.</p>
+    <main class="main-content">
+        <header class="dashboard-header">
+            <h1 class="greeting" id="saudacao">Olá</h1>
+            <div class="summary-cards">
+                <div class="summary-card highlight">
+                    <div class="card-title">Gasto Total</div>
+                    <div class="card-value" id="totalGastos">R$ 0,00</div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-title">Transações</div>
+                    <div class="card-value"><span id="qtdGastos">0</span> <span class="card-subtitle">registradas</span></div>
+                </div>
+            </div>
+        </header>
+
+        <div id="tab-home" class="tab active">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2>Atividade Recente</h2>
+                </div>
+
+                <div class="table-header desktop-only">
+                    <div></div>
+                    <div>Descrição</div>
+                    <div>Categoria</div>
+                    <div>Data</div>
+                    <div style="text-align: right;">Valor</div>
+                    <div style="text-align: right;">Ações</div>
+                </div>
+
+                <div id="listaGastos" class="lista-gastos">
+                    <p class="vazio">Nenhum gasto cadastrado ainda.</p>
+                </div>
+            </div>
         </div>
-    </div>
+
+        <div id="tab-chart" class="tab">
+            <div class="section-container liquid-glass">
+                <div class="section-header">
+                    <h2>Gastos por Categoria</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="graficoGastos"></canvas>
+                </div>
+                <div id="graficoVazio" class="vazio" style="display:none">Nenhum dado para exibir.</div>
+            </div>
+        </div>
+    </main>
+
+    <nav class="bottom-nav mobile-only liquid-glass">
+        <button class="nav-btn active" onclick="trocarAba('home', this)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </button>
+        <button class="nav-fab" onclick="abrirModal()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </button>
+        <button class="nav-btn" onclick="trocarAba('chart', this)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+        </button>
+    </nav>
 </div>
 
-<div id="tab-chart" class="tab">
-    <div class="sheet sheet--full liquid-glass" style="margin-top:16px;">
-        <div class="sheet-title">Gastos por Categoria</div>
-        <canvas id="graficoGastos"></canvas>
-        <div id="graficoVazio" class="vazio" style="display:none">Nenhum dado para exibir.</div>
-    </div>
-</div>
-
-<div id="modal" class="modal-overlay" style="display:none"">
+<div id="modal" class="modal-overlay">
     <div class="modal-box liquid-glass">
-        <div class="modal-handle" onclick="fecharModal()"></div>
-        <div class="modal-title">Novo Gasto</div>
+        <div class="modal-handle mobile-only"></div>
+        <div class="modal-header">
+            <h2 class="modal-title">Novo Gasto</h2>
+            <button class="btn-close desktop-only" onclick="fecharModal()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+
         <form id="gastoForm">
             <div class="field-group">
                 <label>Descrição</label>
-                <input type="text" id="descricao" placeholder="Ex: Almoço, Uber...">
+                <input type="text" id="descricao" placeholder="Ex: Almoço, Uber..." required>
             </div>
             <div class="field-group">
                 <label>Valor (R$)</label>
-                <input type="number" id="valor" step="0.01" min="0.01" placeholder="0,00">
+                <input type="number" id="valor" step="0.01" min="0.01" placeholder="0,00" required>
             </div>
             <div class="field-row">
                 <div class="field-group">
                     <label>Categoria</label>
-                    <select id="categoria">
+                    <select id="categoria" required>
                         <option value="">Selecione...</option>
-                        <option value="ALIMENTACAO">🍔 Alimentação</option>
-                        <option value="TRANSPORTE">🚌 Transporte</option>
-                        <option value="LAZER">🎮 Lazer</option>
-                        <option value="OUTROS">📦 Outros</option>
+                        <option value="ALIMENTACAO">Alimentação</option>
+                        <option value="TRANSPORTE">Transporte</option>
+                        <option value="LAZER">Lazer</option>
+                        <option value="OUTROS">Outros</option>
                     </select>
                 </div>
                 <div class="field-group">
                     <label>Data</label>
-                    <input type="date" id="data">
+                    <input type="date" id="data" required>
                 </div>
             </div>
             <div class="modal-actions">
-                <button type="button" class="btn-cancel" onclick="fecharModal()">Cancelar</button>
-                <button type="submit" class="btn-save">Salvar</button>
+                <button type="button" class="btn-cancel mobile-only" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" class="btn-primary">Salvar Gasto</button>
             </div>
         </form>
     </div>
 </div>
-
-<nav class="bottom-nav liquid-glass">
-    <button class="nav-btn active" onclick="trocarAba('home', this)">
-        <span class="nav-icon">⌂</span>
-        <span class="nav-label">Início</span>
-    </button>
-    <button class="nav-btn" onclick="trocarAba('chart', this)">
-        <span class="nav-icon">◱</span>
-        <span class="nav-label">Métricas</span>
-    </button>
-    <button class="nav-fab" onclick="abrirModal()">＋</button>
-</nav>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="app.js"></script>
