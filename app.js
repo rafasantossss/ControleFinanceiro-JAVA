@@ -8,24 +8,44 @@ const emojiCategoria = {
     OUTROS: '📦'
 }
 
+// Função para gerar a saudação baseada no horário
+function atualizarSaudacao() {
+    const hora = new Date().getHours();
+    let saudacao = 'Boa noite';
+    if (hora >= 5 && hora < 12) saudacao = 'Bom dia';
+    else if (hora >= 12 && hora < 18) saudacao = 'Boa tarde';
+
+    const saudacaoEl = document.getElementById('saudacao');
+    if (saudacaoEl) saudacaoEl.innerText = saudacao;
+}
+
 // troca a aba visivel na tela, esconde todas e mostra só a que foi clicada
 function trocarAba(nome, btn) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')) // remove active de todas as abas
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')) // remove active de todos os botoes da nav
     document.getElementById('tab-' + nome).classList.add('active') // ativa a aba clicada
-    btn.classList.add('active') // ativa o botao clicado na nav
+
+    // Sincroniza os botões (se clicar na sidebar, ativa o da bottom nav e vice-versa)
+    document.querySelectorAll('.nav-btn').forEach(b => {
+        if (b.getAttribute('onclick').includes(`'${nome}'`)) b.classList.add('active');
+    });
+
     if (nome === 'chart') desenharGrafico() // se for a aba de grafico, desenha o grafico
 }
 
-// abre o modal de adicionar gasto
+// abre o modal de adicionar gasto (Alterado para classList para permitir animação CSS)
 function abrirModal() {
-    document.getElementById('modal').style.display = 'flex'
+    document.getElementById('modal').classList.add('active');
 }
 
-// fecha o modal de adicionar gasto
+// fecha o modal de adicionar gasto (Alterado para classList para permitir animação CSS)
 function fecharModal() {
-    document.getElementById('modal').style.display = 'none'
+    document.getElementById('modal').classList.remove('active');
 }
+
+// Ícones minimalistas para os botões de ação
+const iconeEditar = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>`;
+const iconeDeletar = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
 
 function carregarGastos() {
 
@@ -48,31 +68,53 @@ function carregarGastos() {
                 dados.forEach(function (gasto) { // se tiver dado inserido retorna com os dados que foram colocados
                     total = total + gasto.valor // total = total mais o valor inserido
                     const emoji = emojiCategoria[gasto.categoria] || '📦' // pega o emoji da categoria, se nao tiver usa o de outros
+
+                    // Formatações para o novo design
+                    const catFormatada = gasto.categoria ? gasto.categoria.charAt(0) + gasto.categoria.slice(1).toLowerCase() : 'Outros';
+                    const dataFormatada = gasto.data ? gasto.data.split('-').reverse().join('/') : '—';
+                    const valorFormatado = parseFloat(gasto.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+
                     lista.innerHTML += `
                         <div class="gasto-item" id="${gasto.id}">
                             <div class="gasto-emoji">${emoji}</div>
-                            <div class="gasto-info">
-                                <div class="gasto-descricao">${gasto.descricao}</div>
-                                <div class="gasto-meta">${gasto.categoria || '—'} · ${gasto.data || '—'}</div>
-                            </div>
-                            <span class="gasto-valor">-R$ ${gasto.valor}</span>
+                            <div class="gasto-descricao">${gasto.descricao}</div>
+                            
+                            <div class="gasto-meta-mobile">${catFormatada} • ${dataFormatada}</div>
+                            
+                            <div class="desktop-only gasto-categoria"><span class="badge">${catFormatada}</span></div>
+                            <div class="desktop-only gasto-data">${dataFormatada}</div>
+                            
+                            <div class="gasto-valor">- R$ ${valorFormatado}</div>
                             <div class="gasto-acoes">
-                                <button class="btn-acao" onclick="editarGastos('${gasto.id}', '${gasto.descricao}', ${gasto.valor}, '${gasto.categoria}', '${gasto.data}')">✏️</button>
-                                <button class="btn-acao danger" onclick="deletarGastos('${gasto.id}')">🗑️</button>
+                                <button class="btn-acao" onclick="editarGastos('${gasto.id}', '${gasto.descricao}', ${gasto.valor}, '${gasto.categoria}', '${gasto.data}')" title="Editar">${iconeEditar}</button>
+                                <button class="btn-acao danger" onclick="deletarGastos('${gasto.id}')" title="Excluir">${iconeDeletar}</button>
                             </div>
                         </div>
                     `
                 })
                 qntd.innerHTML = dados.length //muda no html a qntd com o numero de dados dentro da variavel dados
-                totalValor.innerHTML = 'R$ ' + total.toFixed(2) // mudar escrita do html para o total somado ali em cima, toFixed(2) formata com 2 casas decimais
+                totalValor.innerHTML = 'R$ ' + total.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) // mudar escrita do html para o total somado ali em cima
             }
         })
 }
 
 function editarGastos(id, descricao, valor, categoria, data) {
     const linha = document.getElementById(id)
-    linha.className = 'edit-row' // troca a classe do elemento pra estilizar como linha de edicao
-    linha.innerHTML = `<input id="edit-desc" type="text" value="${descricao}"><input id="edit-valor" type="number" value="${valor}"><select id="edit-categoria" ><option value="ALIMENTACAO" ${categoria === 'ALIMENTACAO' ? 'selected' : ''}>🍔 Alimentação</option> <option value="TRANSPORTE" ${categoria === 'TRANSPORTE' ? 'selected' : ''}>🚌 Transporte</option> <option value="LAZER" ${categoria === 'LAZER' ? 'selected' : ''}>🎮 Lazer</option> <option value="OUTROS" ${categoria === 'OUTROS' ? 'selected' : ''}>📦 Outros</option></select><input id="edit-data" type="date" value="${data}"><button class="btn-salvar-edit" onclick="salvarEdicao('${id}')">Salvar</button>`
+    // Alterado para envolver em edit-wrapper para manter o alinhamento no redesign
+    linha.innerHTML = `
+        <div class="edit-wrapper">
+            <input id="edit-desc" type="text" value="${descricao}">
+            <input id="edit-valor" type="number" step="0.01" value="${valor}">
+            <select id="edit-categoria">
+                <option value="ALIMENTACAO" ${categoria === 'ALIMENTACAO' ? 'selected' : ''}>🍔 Alimentação</option> 
+                <option value="TRANSPORTE" ${categoria === 'TRANSPORTE' ? 'selected' : ''}>🚌 Transporte</option> 
+                <option value="LAZER" ${categoria === 'LAZER' ? 'selected' : ''}>🎮 Lazer</option> 
+                <option value="OUTROS" ${categoria === 'OUTROS' ? 'selected' : ''}>📦 Outros</option>
+            </select>
+            <input id="edit-data" type="date" value="${data}">
+            <button class="btn-primary" style="padding: 10px 20px" onclick="salvarEdicao('${id}')">Salvar</button>
+        </div>
+    `
 }
 
 function salvarEdicao(id) {
@@ -128,8 +170,8 @@ function desenharGrafico() {
 
             const labels = Object.keys(totais) // nomes das categorias
             const valores = Object.values(totais) // valores de cada categoria
-            // Estilo minimalista/futurista: Paleta Monocromática e Tech Blue
-            const cores = ['#2e8eff', '#00d4ff', '#1a365d', '#4a90e2', '#3182ce']
+            // Estilo minimalista premium: Paleta de tons de cinza e branco
+            const cores = ['#FFFFFF', '#D4D4D8', '#A1A1AA', '#71717A', '#3F3F46']
 
             if (window._grafico) window._grafico.destroy() // destroi o grafico anterior pra nao duplicar
 
@@ -137,26 +179,40 @@ function desenharGrafico() {
             window._grafico = new Chart(canvas, {
                 type: 'doughnut',
                 data: {
-                    labels: labels,
+                    labels: labels.map(l => l.charAt(0) + l.slice(1).toLowerCase()),
                     datasets: [{
                         data: valores,
                         backgroundColor: cores.slice(0, labels.length),
-                        borderWidth: 0,
+                        borderWidth: 4,
+                        borderColor: '#09090B', // Separação elegante com a cor do fundo
+                        hoverOffset: 8
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '82%', // Design minimalista: anel mais fino
                     plugins: {
                         legend: {
-                            labels: { color: '#ffffff', font: { size: 12, family: 'Inter' } }
+                            position: 'right',
+                            labels: { color: '#A1A1AA', font: { size: 14, family: 'Inter' }, usePointStyle: true, padding: 20 }
+                        },
+                        tooltip: {
+                            backgroundColor: '#18181B',
+                            titleFont: { family: 'Inter' },
+                            padding: 12,
+                            cornerRadius: 12,
+                            displayColors: false
                         }
                     },
-                    cutout: '80%' // Design minimalista: anel mais fino
+                    animation: { duration: 1000, easing: 'easeOutQuart' }
                 }
             })
         })
 }
 
 window.onload = function() { // quando a pagina carrega ele chama funcao carregar gastos, pra evitar ficar tendo que dar f5
+    atualizarSaudacao(); // chama a saudação dinâmica
     carregarGastos() // chamando a função
 
     const formulario = document.getElementById('gastoForm'); //puxa elemento com id de gastoForm e armazena na variavel
