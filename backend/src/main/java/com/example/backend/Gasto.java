@@ -20,6 +20,7 @@ public class Gasto {
     private BigDecimal valor;
     private LocalDate data;
     private String categoria;
+    private String tipo;
 
 
     public String getId(){
@@ -51,5 +52,11 @@ public class Gasto {
     }
     public void setCategoria(String categoria){
         this.categoria = categoria;
+    }
+    public String getTipo(){
+        return tipo;
+    }
+    public void setTipo(String tipo){
+        this.tipo = tipo;
     }
 }

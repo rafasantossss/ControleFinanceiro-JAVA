@@ -34,8 +34,14 @@ function trocarAba(nome, btn) {
 }
 
 // abre o modal de adicionar gasto (Alterado para classList para permitir animação CSS)
-function abrirModal() {
-    document.getElementById('modal').classList.add('active');
+let tipoAtual = ' '
+
+function abrirModal(tipo) { //ele devolve para a funcao que o tipo = ENTRADA, depois fala que o tipoAtual é igual a tipo
+
+    tipoAtual = tipo
+    document.getElementById('modal')  // pega o elemento com id="modal"
+        .classList                     // acessa a lista de classes CSS dele
+        .add('active');                 // adiciona a classe "active" que quando ta add ativa ele aparece
 }
 
 // fecha o modal de adicionar gasto (Alterado para classList para permitir animação CSS)
@@ -226,9 +232,11 @@ window.onload = function() { // quando a pagina carrega ele chama funcao carrega
             descricao: document.getElementById('descricao').value,
             valor: document.getElementById('valor').value,
             data: document.getElementById('data').value,
-            categoria: document.getElementById('categoria').value
+            categoria: document.getElementById('categoria').value,
+            tipo: tipoAtual //isso serve pra definir o tipo como tipo atual que vem la da funcao de abrir modal
         }; //cria objeto puxando valores de cada id do html // .value serve para extrair exatamente o texto que o usuário digitou
            //no final tudo é agrupado dentro da variavel pacoteGasto
+        console.log(pacoteGasto)
 
         fetch('https://controlefinanceiro-java-production.up.railway.app/gastos', { // fetch executa a chamada de rede para o backend.
             method: 'POST', // metodo que ele espera

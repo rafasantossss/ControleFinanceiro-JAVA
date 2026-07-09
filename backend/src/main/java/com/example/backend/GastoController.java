@@ -23,7 +23,6 @@ public class GastoController {
 
         //removido porque agora tem que salvar dentro do banco e nao na memoria
         //gastos.add(novoGasto); //adiciona o novo gasto dentro da array
-
         gastoRepository.save(novoGasto);
         System.out.println("Chegou um gasto: " + novoGasto.getDescricao() +
                 " | Valor: " + novoGasto.getValor() +
