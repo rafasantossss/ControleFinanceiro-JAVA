@@ -5,7 +5,11 @@ const emojiCategoria = {
     ALIMENTACAO: '🍔',
     TRANSPORTE: '🚌',
     LAZER: '🎮',
-    OUTROS: '📦'
+    OUTROS: '📦',
+    Salário:`💰`,
+    Investimentos : `📈`,
+    Presente :`🎁`,
+    Reembolso :`💸`
 }
 
 // Função para gerar a saudação baseada no horário
@@ -36,12 +40,34 @@ function trocarAba(nome, btn) {
 // abre o modal de adicionar gasto (Alterado para classList para permitir animação CSS)
 let tipoAtual = ' '
 
-function abrirModal(tipo) { //ele devolve para a funcao que o tipo = ENTRADA, depois fala que o tipoAtual é igual a tipo
+function abrirModal(tipo) {
 
-    tipoAtual = tipo
-    document.getElementById('modal')  // pega o elemento com id="modal"
-        .classList                     // acessa a lista de classes CSS dele
-        .add('active');                 // adiciona a classe "active" que quando ta add ativa ele aparece
+    tipoAtual = tipo;
+
+    const categoria = document.getElementById("categoria");
+
+    if (tipo == "SAIDA") {
+
+        categoria.innerHTML = `
+            <option value="ALIMENTACAO">🍔 Alimentação</option>
+            <option value="TRANSPORTE">🚌 Transporte</option>
+            <option value="LAZER">🎮 Lazer</option>
+            <option value="OUTROS">📦 Outros</option>
+        `;
+
+    } else {
+
+        categoria.innerHTML = `
+            <option value="Salário">💰 Salário</option>
+            <option value="Investimentos">📈 Investimentos</option>
+            <option value="Presente">🎁 Presente</option>
+            <option value="Reembolso">💸 Reembolso</option>
+            <option value="OUTROS">📦 Outros</option>
+        `;
+
+    }
+
+    document.getElementById("modal").classList.add("active");
 }
 
 // fecha o modal de adicionar gasto (Alterado para classList para permitir animação CSS)
@@ -72,13 +98,25 @@ function carregarGastos() {
                 qntd.innerHTML = 0 // definindo qntd igual a 0
             } else {
                 dados.forEach(function (gasto) { // se tiver dado inserido retorna com os dados que foram colocados
-                    total = total + gasto.valor // total = total mais o valor inserido
+                    if (gasto.tipo == "SAIDA") {
+                        total = total - gasto.valor
+                    } else {
+                        total = total + gasto.valor
+                    }// se o gasto for igual a saida ele vai diminuir do valor total, se nao vai ser somar o total
                     const emoji = emojiCategoria[gasto.categoria] || '📦' // pega o emoji da categoria, se nao tiver usa o de outros
 
                     // Formatações para o novo design
                     const catFormatada = gasto.categoria ? gasto.categoria.charAt(0) + gasto.categoria.slice(1).toLowerCase() : 'Outros';
                     const dataFormatada = gasto.data ? gasto.data.split('-').reverse().join('/') : '—';
                     const valorFormatado = parseFloat(gasto.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+
+                    // Se for SAIDA recebe "-", senão recebe "+"
+                    let sinal = "";
+                    if (gasto.tipo == "SAIDA") {
+                        sinal = "-";
+                    } else {
+                        sinal = "+";
+                    }
 
                     lista.innerHTML += `
                         <div class="gasto-item" id="${gasto.id}">
@@ -89,10 +127,9 @@ function carregarGastos() {
                             
                             <div class="desktop-only gasto-categoria"><span class="badge">${catFormatada}</span></div>
                             <div class="desktop-only gasto-data">${dataFormatada}</div>
-                            
-                            <div class="gasto-valor">- R$ ${valorFormatado}</div>
+                            <div class="gasto-valor">${sinal} R$ ${valorFormatado}</div> 
                             <div class="gasto-acoes">
-                                <button class="btn-acao" onclick="editarGastos('${gasto.id}', '${gasto.descricao}', ${gasto.valor}, '${gasto.categoria}', '${gasto.data}')" title="Editar">${iconeEditar}</button>
+                                <button class="btn-acao" onclick="editarGastos('${gasto.id}','${gasto.descricao}',${gasto.valor},'${gasto.categoria}','${gasto.data}','${gasto.tipo}')">${iconeEditar}</button>
                                 <button class="btn-acao danger" onclick="deletarGastos('${gasto.id}')" title="Excluir">${iconeDeletar}</button>
                             </div>
                         </div>
@@ -104,23 +141,57 @@ function carregarGastos() {
         })
 }
 
-function editarGastos(id, descricao, valor, categoria, data) {
-    const linha = document.getElementById(id)
-    // Alterado para envolver em edit-wrapper para manter o alinhamento no redesign
+function editarGastos(id, descricao, valor, categoria, data, tipo) {
+
+    const linha = document.getElementById(id);
+
+    // Aqui vamos guardar o HTML do select
+    let selectCategoria = "";
+
+    // Se for uma SAÍDA, mostra categorias de gastos
+    if (tipo == "SAIDA") {
+
+        selectCategoria = `
+            <select id="edit-categoria">
+                <option value="ALIMENTACAO" ${categoria == "ALIMENTACAO" ? "selected" : ""}>🍔 Alimentação</option>
+                <option value="TRANSPORTE" ${categoria == "TRANSPORTE" ? "selected" : ""}>🚌 Transporte</option>
+                <option value="LAZER" ${categoria == "LAZER" ? "selected" : ""}>🎮 Lazer</option>
+                <option value="OUTROS" ${categoria == "OUTROS" ? "selected" : ""}>📦 Outros</option>
+            </select>
+        `;
+
+    } else {
+
+        // Se for ENTRADA, mostra categorias de entrada
+        selectCategoria = `
+            <select id="edit-categoria">
+                <option value="Salário" ${categoria == "Salário" ? "selected" : ""}>💰 Salário</option>
+                <option value="Investimentos" ${categoria == "Investimentos" ? "selected" : ""}>📈 Investimentos</option>
+                <option value="Presente" ${categoria == "Presente" ? "selected" : ""}>🎁 Presente</option>
+                <option value="Reembolso" ${categoria == "Reembolso" ? "selected" : ""}>💸 Reembolso</option>
+                <option value="OUTROS" ${categoria == "OUTROS" ? "selected" : ""}>📦 Outros</option>
+            </select>
+        `;
+
+    }
+
     linha.innerHTML = `
         <div class="edit-wrapper">
+
             <input id="edit-desc" type="text" value="${descricao}">
+
             <input id="edit-valor" type="number" step="0.01" value="${valor}">
-            <select id="edit-categoria">
-                <option value="ALIMENTACAO" ${categoria === 'ALIMENTACAO' ? 'selected' : ''}>🍔 Alimentação</option> 
-                <option value="TRANSPORTE" ${categoria === 'TRANSPORTE' ? 'selected' : ''}>🚌 Transporte</option> 
-                <option value="LAZER" ${categoria === 'LAZER' ? 'selected' : ''}>🎮 Lazer</option> 
-                <option value="OUTROS" ${categoria === 'OUTROS' ? 'selected' : ''}>📦 Outros</option>
-            </select>
+
+            ${selectCategoria}
+
             <input id="edit-data" type="date" value="${data}">
-            <button class="btn-primary" style="padding: 10px 20px" onclick="salvarEdicao('${id}')">Salvar</button>
+
+            <button class="btn-primary" onclick="salvarEdicao('${id}')">
+                Salvar
+            </button>
+
         </div>
-    `
+    `;
 }
 
 function salvarEdicao(id) {
