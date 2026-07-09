@@ -225,7 +225,7 @@ body {
 .bottom-nav .nav-btn.active { color: var(--text-primary); }
 .nav-fab {
     background: var(--accent); color: #000; border: none;
-    width: 48px; height: 48px; border-radius: 50%;
+    width: 85px; height: 48px; border-radius: 15px; display: flex; align-items: center; justify-content: center;%;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: var(--transition);
 }

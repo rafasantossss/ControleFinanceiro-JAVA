@@ -33,8 +33,6 @@ function trocarAba(nome, btn) {
     document.querySelectorAll('.nav-btn').forEach(b => {
         if (b.getAttribute('onclick').includes(`'${nome}'`)) b.classList.add('active');
     });
-
-    if (nome === 'chart') desenharGrafico() // se for a aba de grafico, desenha o grafico
 }
 
 // abre o modal de adicionar gasto (Alterado para classList para permitir animação CSS)
@@ -222,71 +220,7 @@ function deletarGastos(id) {
         })
 }
 
-// desenha o grafico de pizza com os gastos agrupados por categoria
-function desenharGrafico() {
-    fetch('https://controlefinanceiro-java-production.up.railway.app/gastos')
-        .then(function(r) { return r.json() })
-        .then(function(dados) {
-            const vazio = document.getElementById('graficoVazio')
-            const canvas = document.getElementById('graficoGastos')
 
-            if (dados.length === 0) { // se nao tiver dados esconde o canvas e mostra mensagem
-                canvas.style.display = 'none'
-                vazio.style.display = 'block'
-                return
-            }
-
-            canvas.style.display = 'block'
-            vazio.style.display = 'none'
-
-            const totais = {} // objeto que vai guardar o total de cada categoria
-            dados.forEach(function(g) {
-                const cat = g.categoria || 'OUTROS'
-                totais[cat] = (totais[cat] || 0) + g.valor // soma o valor de cada categoria
-            })
-
-            const labels = Object.keys(totais) // nomes das categorias
-            const valores = Object.values(totais) // valores de cada categoria
-            // Estilo minimalista premium: Paleta de tons de cinza e branco
-            const cores = ['#FFFFFF', '#D4D4D8', '#A1A1AA', '#71717A', '#3F3F46']
-
-            if (window._grafico) window._grafico.destroy() // destroi o grafico anterior pra nao duplicar
-
-            // cria o grafico usando a biblioteca Chart.js
-            window._grafico = new Chart(canvas, {
-                type: 'doughnut',
-                data: {
-                    labels: labels.map(l => l.charAt(0) + l.slice(1).toLowerCase()),
-                    datasets: [{
-                        data: valores,
-                        backgroundColor: cores.slice(0, labels.length),
-                        borderWidth: 4,
-                        borderColor: '#09090B', // Separação elegante com a cor do fundo
-                        hoverOffset: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '82%', // Design minimalista: anel mais fino
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: { color: '#A1A1AA', font: { size: 14, family: 'Inter' }, usePointStyle: true, padding: 20 }
-                        },
-                        tooltip: {
-                            backgroundColor: '#18181B',
-                            titleFont: { family: 'Inter' },
-                            padding: 12,
-                            cornerRadius: 12,
-                            displayColors: false
-                        }
-                    },
-                    animation: { duration: 1000, easing: 'easeOutQuart' }
-                }
-            })
-        })
-}
 
 window.onload = function() { // quando a pagina carrega ele chama funcao carregar gastos, pra evitar ficar tendo que dar f5
     atualizarSaudacao(); // chama a saudação dinâmica
