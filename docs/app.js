@@ -81,7 +81,7 @@ function carregarGastos() {
 
     let total = 0
 
-    fetch('https://controlefinanceiro-java-production.up.railway.app/gastos')
+    fetch('https://controlefinanceiro-java.onrender.com/gastos')
         .then(function(resposta) { // cria variavel resposta e retorna com a resposta do /gastos
             return resposta.json()
         })
@@ -200,7 +200,7 @@ function salvarEdicao(id) {
         data: document.getElementById('edit-data').value,
     }
 
-    fetch('https://controlefinanceiro-java-production.up.railway.app/gastos/' + id, {
+    fetch('https://controlefinanceiro-java.onrender.com/gastos/' + id, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'  // Avisando que é um pacote JSON
@@ -212,7 +212,7 @@ function salvarEdicao(id) {
 }
 
 function deletarGastos(id) {
-    fetch('https://controlefinanceiro-java-production.up.railway.app/gastos/' + id, { // aqui ele fala que o localhost /gastos vai adicionar o id do item, ou seja /gastos/1
+    fetch('https://controlefinanceiro-java.onrender.com/gastos/' + id, { // aqui ele fala que o localhost /gastos vai adicionar o id do item, ou seja /gastos/1
         method: 'DELETE' // metodo que ele espera
     })
         .then(function() { // entao sempre que o fetch terminar ele executa funcao
@@ -243,7 +243,7 @@ window.onload = function() { // quando a pagina carrega ele chama funcao carrega
            //no final tudo é agrupado dentro da variavel pacoteGasto
         console.log(pacoteGasto)
 
-        fetch('https://controlefinanceiro-java-production.up.railway.app/gastos', { // fetch executa a chamada de rede para o backend.
+        fetch('https://controlefinanceiro-java.onrender.com/gastos', { // fetch executa a chamada de rede para o backend.
             method: 'POST', // metodo que ele espera
             headers: {
                 'Content-Type': 'application/json'  // Avisando que é um pacote JSON
