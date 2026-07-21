@@ -1,248 +1,203 @@
 # 💸 Controle Financeiro
 
-Sistema web de gerenciamento financeiro desenvolvido com Java, Spring Boot e JavaScript, permitindo o controle de receitas e despesas por meio de uma interface moderna, responsiva e intuitiva.
+Sistema web de gerenciamento financeiro desenvolvido com Java, Spring Boot e JavaScript puro, permitindo o controle de receitas e despesas por meio de uma interface moderna, responsiva e intuitiva.
 
-O projeto foi construído com foco em boas práticas de desenvolvimento, arquitetura REST, separação entre frontend e backend e persistência de dados utilizando JPA/Hibernate.
-
----
-
-# 📌 Visão Geral
-
-O Controle Financeiro é uma aplicação Full Stack que permite registrar movimentações financeiras, acompanhar o saldo consolidado e gerenciar transações de forma simples e eficiente.
-
-A aplicação é composta por:
-
-- Frontend hospedado no GitHub Pages;
-- Backend desenvolvido em Spring Boot e hospedado na Railway;
-- API REST para comunicação entre cliente e servidor;
-- Banco de dados gerenciado através do Spring Data JPA.
+Projeto desenvolvido como aprendizado prático de desenvolvimento Full Stack, com auxílio de IA (Claude - Anthropic) como professor e revisor técnico ao longo de todo o processo.
 
 ---
 
-# 🚀 Demonstração
+## 🌐 Acesso
 
-**Aplicação:**  
-https://rafasantossss.github.io/ControleFinanceiro-JAVA/
+**Aplicação:** https://rafasantossss.github.io/ControleFinanceiro-JAVA/
 
-**API REST:**  
-https://controlefinanceiro-java.onrender.com/
-
-https://controlefinanceiro-java.onrender.com/gastos
+**API REST:**
+- https://controlefinanceiro-java.onrender.com/
+- https://controlefinanceiro-java.onrender.com/gastos
 
 ---
 
-# ✨ Funcionalidades
+## ✨ Funcionalidades
 
-- Cadastro de receitas e despesas
+- Cadastro de receitas e despesas separados
 - Edição de movimentações financeiras
 - Exclusão de registros
-- Cálculo automático do saldo
+- Cálculo automático do saldo (entradas - saídas)
 - Contagem de transações
-- Organização por categorias
+- Organização por categorias (gastos e receitas)
 - Registro por data
-- Interface responsiva
-- Atualização dinâmica dos dados sem recarregar a página
+- Saudação dinâmica baseada no horário
+- Interface responsiva (mobile e desktop)
+- Atualização dinâmica sem recarregar a página
 - Integração completa entre Frontend e Backend via Fetch API
 
 ---
 
-# 🛠 Tecnologias Utilizadas
+## 🛠 Tecnologias
 
-## Backend
-
-- Java
-- Spring Boot
+**Backend**
+- Java 21
+- Spring Boot 4.0.6
 - Spring Data JPA
 - Hibernate
 - Maven
 - Jakarta Persistence
 
-## Frontend
-
+**Frontend**
 - HTML5
 - CSS3
-- JavaScript (ES6)
+- JavaScript (ES6+)
 - Chart.js
 
-## Deploy
+**Banco de Dados**
+- PostgreSQL (Neon)
 
-- GitHub Pages
-- Railway
+**Deploy**
+- GitHub Pages (Frontend)
+- Render (Backend)
+- UptimeRobot (Monitoramento e manutenção da disponibilidade da API)
 
 ---
 
-# 🏗 Arquitetura
+## 🏗 Arquitetura
 
-O projeto segue uma arquitetura baseada em API REST.
-
-```text
+```
 Frontend (HTML + CSS + JavaScript)
             │
             │ HTTP (Fetch API)
             ▼
-Backend (Spring Boot)
+Backend (Spring Boot — Render)
             │
             ▼
-Spring Data JPA
+Spring Data JPA / Hibernate
             │
             ▼
-Banco de Dados
+PostgreSQL (Neon)
 ```
-
-A comunicação entre cliente e servidor é realizada utilizando requisições HTTP nos métodos REST (GET, POST, PUT e DELETE).
 
 ---
 
-# 📂 Estrutura do Projeto
+## 📂 Estrutura do Projeto
 
-```text
+```
 ControleFinanceiro-JAVA
 │
 ├── backend
-│   ├── Entity
-│   ├── Repository
-│   ├── Controller
-│   ├── Service
-│   └── BackendApplication
+│   ├── src/main/java/com/example/backend
+│   │   ├── Gasto.java           (Entidade JPA)
+│   │   ├── GastoRepository.java (Repositório)
+│   │   ├── GastoController.java (Controller REST)
+│   │   └── BackendApplication.java
+│   ├── src/main/resources
+│   │   └── application.properties
+│   └── pom.xml
 │
 ├── frontend
 │   ├── index.html
 │   ├── style.css
 │   ├── app.js
-│   └── assets
+│   └── apple-touch-icon.png
 │
 └── README.md
 ```
 
 ---
 
-# 🗄 Modelo de Dados
+## 🗄 Modelo de Dados
 
-A entidade **Gasto** representa cada movimentação financeira cadastrada na aplicação.
+| Campo      | Tipo       |
+|------------|------------|
+| id         | UUID       |
+| descricao  | String     |
+| valor      | BigDecimal |
+| data       | LocalDate  |
+| categoria  | String     |
+| tipo       | String     |
 
-| Campo | Tipo |
-|--------|------|
-| id | UUID |
-| descricao | String |
-| valor | BigDecimal |
-| data | LocalDate |
-| categoria | String |
-| tipo | String |
+**Tipos**
+- `ENTRADA` — receitas
+- `SAIDA` — despesas
 
-## Tipos
+**Categorias de Saída**
+- Alimentação, Transporte, Lazer, Outros
 
-- ENTRADA
-- SAIDA
-
-## Categorias
-
-### Despesas
-
-- Alimentação
-- Transporte
-- Lazer
-- Outros
-
-### Receitas
-
-- Salário
-- Investimentos
-- Presente
-- Reembolso
-- Outros
+**Categorias de Entrada**
+- Salário, Investimentos, Presente, Reembolso, Outros
 
 ---
 
-# 🌐 Endpoints da API
+## 🌐 Endpoints da API
 
-| Método | Endpoint | Descrição |
-|---------|----------|-----------|
-| GET | /gastos | Lista todas as movimentações |
-| POST | /gastos | Cadastra uma movimentação |
-| PUT | /gastos/{id} | Atualiza uma movimentação |
-| DELETE | /gastos/{id} | Remove uma movimentação |
-
----
-
-# 💻 Interface
-
-A interface foi desenvolvida priorizando simplicidade, responsividade e experiência do usuário.
-
-Principais características:
-
-- Layout moderno
-- Glassmorphism
-- Navegação otimizada para dispositivos móveis
-- Dashboard financeiro
-- Cards de resumo
-- Modal para cadastro
-- Atualização instantânea das informações
+| Método | Endpoint       | Descrição                    |
+|--------|----------------|------------------------------|
+| GET    | /gastos        | Lista todas as movimentações |
+| POST   | /gastos        | Cadastra uma movimentação    |
+| PUT    | /gastos/{id}   | Atualiza uma movimentação    |
+| DELETE | /gastos/{id}   | Remove uma movimentação      |
 
 ---
 
-# ⚙ Como executar o projeto
+## ⚙ Como executar localmente
 
-## Clone o repositório
-
+**Clone o repositório**
 ```bash
 git clone https://github.com/rafasantossss/ControleFinanceiro-JAVA.git
 ```
 
-## Backend
-
+**Backend**
 ```bash
 cd backend
 mvn spring-boot:run
 ```
+Servidor iniciado em: `http://localhost:8080`
 
-O servidor será iniciado em:
+**Frontend**
 
-```
-http://localhost:8080
-```
-
-## Frontend
-
-Abra o arquivo `index.html` no navegador ou utilize a extensão **Live Server** do Visual Studio Code.
-
-Também é possível acessar a versão publicada:
-
-https://rafasantossss.github.io/ControleFinanceiro-JAVA/
+Abra o `frontend/index.html` no navegador ou use a extensão Live Server do VS Code.
 
 ---
 
-# 📈 Melhorias Futuras
+## 📈 Melhorias Futuras
 
 - Autenticação de usuários (JWT)
-- Cadastro de múltiplas contas
-- Dashboard com gráficos completos
-- Filtros por período
+- Filtros por período e categoria
 - Busca por descrição
-- Exportação para PDF
-- Exportação para Excel
-- Metas financeiras
-- Orçamento mensal
-- Relatórios personalizados
+- Exportação para PDF e Excel
+- Metas financeiras mensais
+- Gráficos avançados no dashboard
+- Cadastro de múltiplas contas
 
 ---
 
-# 📚 Conceitos Aplicados
+## 📚 Conceitos Aplicados
 
 - Programação Orientada a Objetos (POO)
-- API REST
-- CRUD
-- Arquitetura Cliente-Servidor
-- Persistência de Dados
-- Spring Data JPA
-- Hibernate
+- API REST e arquitetura Cliente-Servidor
+- CRUD completo
+- Persistência com Spring Data JPA e Hibernate
+- UUID para identificação única
+- Variáveis de ambiente para segurança
 - Manipulação do DOM
-- JavaScript Assíncrono (Fetch API)
-- Responsividade
-- Organização em camadas
+- JavaScript assíncrono (Promises, Fetch API)
+- Deploy separado de frontend e backend
+- Responsividade com CSS Grid e Media Queries
 
 ---
 
-# 👨‍💻 Autor
+## 🤖 Desenvolvimento com IA
+
+Este projeto foi desenvolvido com auxílio do **Claude (Anthropic)** como professor e revisor técnico. A IA foi utilizada para:
+
+- Explicar conceitos de Java, Spring Boot e JavaScript
+- Revisar código e identificar erros
+- Sugerir boas práticas de desenvolvimento
+- Ensinar arquitetura REST e integração entre camadas
+- Guiar o processo de deploy e configuração de banco de dados
+
+O desenvolvimento seguiu uma metodologia de aprendizado ativo — os conceitos foram explicados antes de cada implementação, e o código foi escrito pelo próprio desenvolvedor.
+
+---
+
+## 👨‍💻 Autor
 
 **Rafael Santos**
 
@@ -250,6 +205,6 @@ GitHub: https://github.com/rafasantossss
 
 ---
 
-# 📄 Licença
+## 📄 Licença
 
-Este projeto foi desenvolvido para fins de estudo e demonstração de conhecimentos em desenvolvimento Full Stack utilizando Java, Spring Boot e JavaScript.
+Projeto desenvolvido para fins de estudo e demonstração de conhecimentos em desenvolvimento Full Stack com Java, Spring Boot e JavaScript.
