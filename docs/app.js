@@ -241,7 +241,6 @@ window.onload = function() { // quando a pagina carrega ele chama funcao carrega
             tipo: tipoAtual //isso serve pra definir o tipo como tipo atual que vem la da funcao de abrir modal
         }; //cria objeto puxando valores de cada id do html // .value serve para extrair exatamente o texto que o usuário digitou
            //no final tudo é agrupado dentro da variavel pacoteGasto
-        console.log(pacoteGasto)
 
         fetch('https://controlefinanceiro-java.onrender.com/gastos', { // fetch executa a chamada de rede para o backend.
             method: 'POST', // metodo que ele espera
