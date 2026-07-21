@@ -4,6 +4,9 @@ Sistema web de gerenciamento financeiro desenvolvido com Java, Spring Boot e Jav
 
 Projeto desenvolvido como aprendizado prático de desenvolvimento Full Stack, com auxílio de IA (Claude - Anthropic) como professor e revisor técnico ao longo de todo o processo.
 
+
+!!Valores apenas de exemplo!!
+
 ---
 
 ## 🌐 Acesso
