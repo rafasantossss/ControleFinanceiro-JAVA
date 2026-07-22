@@ -57,7 +57,7 @@ body {
     position: fixed;
     left: 0;
     top: 0;
-    display: flex;
+    display: none;
     flex-direction: column;
     padding: 32px 24px;
     border-right: 1px solid var(--border-color);
@@ -293,4 +293,9 @@ body {
 
 .sidebar-fab {
     width: 100%;
+}
+@media (min-width: 768px) {
+    .sidebar {
+        display: flex; /* mostra só no desktop */
+    }
 }
