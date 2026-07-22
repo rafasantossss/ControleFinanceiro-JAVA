@@ -12,12 +12,19 @@
 
 <div class="app-layout">
     <aside class="sidebar desktop-only liquid-glass">
-        <div class="sidebar-brand">
-            <div class="brand-icon">◈</div>
-            <span>Financeiro</span>
-        </div>
-        <button class="btn-primary sidebar-fab" onclick="abrirModal()">Novo Gasto</button>
-    </aside>
+    <div class="sidebar-brand">
+        <div class="brand-icon">◈</div>
+        <span>Financeiro</span>
+    </div>
+
+    <button class="btn-primary sidebar-fab" onclick="abrirModal('ENTRADA')">
+        + Nova Entrada
+    </button>
+
+    <button class="btn-primary sidebar-fab" onclick="abrirModal('SAIDA')">
+        - Nova Saída
+    </button>
+</aside>
 
     <main class="main-content">
         <header class="dashboard-header">
