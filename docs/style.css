@@ -283,3 +283,14 @@ body {
 .chart-container { position: relative; height: 350px; width: 100%; }
 @media (min-width: 768px) { .chart-container { height: 450px; } }
 .vazio { text-align: center; color: var(--text-secondary); padding: 48px 0; font-size: 0.95rem; }
+.sidebar-actions {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sidebar-fab {
+    width: 100%;
+    margin-top: 0;
+}
