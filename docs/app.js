@@ -173,7 +173,7 @@ function editarGastos(id, descricao, valor, categoria, data, tipo) {
 
     }
 
-    linha.textContent = `
+    linha.innerHTML  = `
         <div class="edit-wrapper">
 
             <input id="edit-desc" type="text" value="${descricao}">
