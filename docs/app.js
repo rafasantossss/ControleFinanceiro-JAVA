@@ -91,7 +91,10 @@ function carregarGastos() {
             const qntd = document.getElementById('qtdGastos') // qntd = quantidade no html
             lista.innerHTML = '' // impede duplicacao de informacoes
             if(dados.length == 0) { // se nao tiver nenhum dado inserido retorna isso
-                lista.innerHTML = '<p class="vazio">Nenhum gasto cadastrado ainda.</p>'
+                const vazio = document.createElement('p')
+                vazio.className = 'vazio'
+                vazio.textContent = 'Nenhum gasto cadastrado ainda.'
+                lista.appendChild(vazio)
                 totalValor.textContent = 'R$ 0,00' // + 0 pra ele nao bugar e ficar com o valor do ultimo item, ja que se dados for 0 é pq nao tem dado, entao valor e 0
                 qntd.textContent = 0 // definindo qntd igual a 0
             } else {
@@ -116,22 +119,81 @@ function carregarGastos() {
                         sinal = "+";
                     }
 
-                    lista.textContent  += `
-                        <div class="gasto-item" id="${gasto.id}">
-                            <div class="gasto-emoji">${emoji}</div>
-                            <div class="gasto-descricao">${gasto.descricao}</div>
-                            
-                            <div class="gasto-meta-mobile">${catFormatada} • ${dataFormatada}</div>
-                            
-                            <div class="desktop-only gasto-categoria"><span class="badge">${catFormatada}</span></div>
-                            <div class="desktop-only gasto-data">${dataFormatada}</div>
-                            <div class="gasto-valor">${sinal} R$ ${valorFormatado}</div> 
-                            <div class="gasto-acoes">
-                                <button class="btn-acao" onclick="editarGastos('${gasto.id}','${gasto.descricao}',${gasto.valor},'${gasto.categoria}','${gasto.data}','${gasto.tipo}')">${iconeEditar}</button>
-                                <button class="btn-acao danger" onclick="deletarGastos('${gasto.id}')" title="Excluir">${iconeDeletar}</button>
-                            </div>
-                        </div>
-                    `
+                    const item = document.createElement('div')
+                    item.className = 'gasto-item'
+                    item.id = gasto.id
+
+                    const divEmoji = document.createElement('div')
+                    divEmoji.className = 'gasto-emoji'
+                    divEmoji.textContent = emoji
+
+                    const divDesc = document.createElement('div')
+                    divDesc.className = 'gasto-descricao'
+                    divDesc.textContent = gasto.descricao
+
+                    const divMetaMobile = document.createElement('div')
+                    divMetaMobile.className = 'gasto-meta-mobile'
+                    divMetaMobile.textContent = `${catFormatada} • ${dataFormatada}`
+
+                    const divCat = document.createElement('div')
+                    divCat.className = 'desktop-only gasto-categoria'
+                    const badge = document.createElement('span')
+                    badge.className = 'badge'
+                    badge.textContent = catFormatada
+                    divCat.appendChild(badge)
+
+                    const divData = document.createElement('div')
+                    divData.className = 'desktop-only gasto-data'
+                    divData.textContent = dataFormatada
+
+                    const divValor = document.createElement('div')
+                    divValor.className = 'gasto-valor'
+                    divValor.textContent = `${sinal} R$ ${valorFormatado}`
+
+                    const divAcoes = document.createElement('div')
+                    divAcoes.className = 'gasto-acoes'
+
+                    const btnEditar = document.createElement('button')
+                    btnEditar.className = 'btn-acao'
+                    btnEditar.innerHTML = iconeEditar
+                    btnEditar.dataset.id = gasto.id
+                    btnEditar.dataset.descricao = gasto.descricao
+                    btnEditar.dataset.valor = gasto.valor
+                    btnEditar.dataset.categoria = gasto.categoria
+                    btnEditar.dataset.data = gasto.data
+                    btnEditar.dataset.tipo = gasto.tipo
+                    btnEditar.addEventListener('click', function() {
+                        editarGastos(
+                            this.dataset.id,
+                            this.dataset.descricao,
+                            this.dataset.valor,
+                            this.dataset.categoria,
+                            this.dataset.data,
+                            this.dataset.tipo
+                        )
+                    })
+
+                    const btnDeletar = document.createElement('button')
+                    btnDeletar.className = 'btn-acao danger'
+                    btnDeletar.title = 'Excluir'
+                    btnDeletar.innerHTML = iconeDeletar
+                    btnDeletar.dataset.id = gasto.id
+                    btnDeletar.addEventListener('click', function() {
+                        deletarGastos(this.dataset.id)
+                    })
+
+                    divAcoes.appendChild(btnEditar)
+                    divAcoes.appendChild(btnDeletar)
+
+                    item.appendChild(divEmoji)
+                    item.appendChild(divDesc)
+                    item.appendChild(divMetaMobile)
+                    item.appendChild(divCat)
+                    item.appendChild(divData)
+                    item.appendChild(divValor)
+                    item.appendChild(divAcoes)
+
+                    lista.appendChild(item)
                 })
                 qntd.textContent  = dados.length //muda no html a qntd com o numero de dados dentro da variavel dados
                 totalValor.textContent  = 'R$ ' + total.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) // mudar escrita do html para o total somado ali em cima
@@ -143,53 +205,70 @@ function editarGastos(id, descricao, valor, categoria, data, tipo) {
 
     const linha = document.getElementById(id);
 
-    // Aqui vamos guardar o HTML do select
-    let selectCategoria = "";
+    let opcoesCategoria = []
 
-    // Se for uma SAÍDA, mostra categorias de gastos
     if (tipo == "SAIDA") {
-
-        selectCategoria = `
-            <select id="edit-categoria">
-                <option value="ALIMENTACAO" ${categoria == "ALIMENTACAO" ? "selected" : ""}>🍔 Alimentação</option>
-                <option value="TRANSPORTE" ${categoria == "TRANSPORTE" ? "selected" : ""}>🚌 Transporte</option>
-                <option value="LAZER" ${categoria == "LAZER" ? "selected" : ""}>🎮 Lazer</option>
-                <option value="OUTROS" ${categoria == "OUTROS" ? "selected" : ""}>📦 Outros</option>
-            </select>
-        `;
-
+        opcoesCategoria = [
+            { value: 'ALIMENTACAO', label: '🍔 Alimentação' },
+            { value: 'TRANSPORTE',  label: '🚌 Transporte'  },
+            { value: 'LAZER',       label: '🎮 Lazer'       },
+            { value: 'OUTROS',      label: '📦 Outros'      },
+        ]
     } else {
-
-        // Se for ENTRADA, mostra categorias de entrada
-        selectCategoria = `
-            <select id="edit-categoria">
-                <option value="Salário" ${categoria == "Salário" ? "selected" : ""}>💰 Salário</option>
-                <option value="Investimentos" ${categoria == "Investimentos" ? "selected" : ""}>📈 Investimentos</option>
-                <option value="Presente" ${categoria == "Presente" ? "selected" : ""}>🎁 Presente</option>
-                <option value="Reembolso" ${categoria == "Reembolso" ? "selected" : ""}>💸 Reembolso</option>
-                <option value="OUTROS" ${categoria == "OUTROS" ? "selected" : ""}>📦 Outros</option>
-            </select>
-        `;
-
+        opcoesCategoria = [
+            { value: 'Salário',       label: '💰 Salário'      },
+            { value: 'Investimentos', label: '📈 Investimentos' },
+            { value: 'Presente',      label: '🎁 Presente'     },
+            { value: 'Reembolso',     label: '💸 Reembolso'    },
+            { value: 'OUTROS',        label: '📦 Outros'       },
+        ]
     }
 
-    linha.innerHTML  = `
-        <div class="edit-wrapper">
+    const wrapper = document.createElement('div')
+    wrapper.className = 'edit-wrapper'
 
-            <input id="edit-desc" type="text" value="${descricao}">
+    const inputDesc = document.createElement('input')
+    inputDesc.id = 'edit-desc'
+    inputDesc.type = 'text'
+    inputDesc.value = descricao
 
-            <input id="edit-valor" type="number" step="0.01" value="${valor}">
+    const inputValor = document.createElement('input')
+    inputValor.id = 'edit-valor'
+    inputValor.type = 'number'
+    inputValor.step = '0.01'
+    inputValor.value = valor
 
-            ${selectCategoria}
+    const select = document.createElement('select')
+    select.id = 'edit-categoria'
+    opcoesCategoria.forEach(function(op) {
+        const option = document.createElement('option')
+        option.value = op.value
+        option.textContent = op.label
+        if (op.value === categoria) option.selected = true
+        select.appendChild(option)
+    })
 
-            <input id="edit-data" type="date" value="${data}">
+    const inputData = document.createElement('input')
+    inputData.id = 'edit-data'
+    inputData.type = 'date'
+    inputData.value = data
 
-            <button class="btn-primary" onclick="salvarEdicao('${id}')">
-                Salvar
-            </button>
+    const btnSalvar = document.createElement('button')
+    btnSalvar.className = 'btn-primary'
+    btnSalvar.textContent = 'Salvar'
+    btnSalvar.dataset.id = id
+    btnSalvar.addEventListener('click', function() {
+        salvarEdicao(this.dataset.id)
+    })
 
-        </div>
-    `;
+    wrapper.appendChild(inputDesc)
+    wrapper.appendChild(inputValor)
+    wrapper.appendChild(select)
+    wrapper.appendChild(inputData)
+    wrapper.appendChild(btnSalvar)
+
+    linha.innerHTML = ''
+    linha.appendChild(wrapper)
 }
 
 function salvarEdicao(id) {
