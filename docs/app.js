@@ -92,8 +92,8 @@ function carregarGastos() {
             lista.innerHTML = '' // impede duplicacao de informacoes
             if(dados.length == 0) { // se nao tiver nenhum dado inserido retorna isso
                 lista.innerHTML = '<p class="vazio">Nenhum gasto cadastrado ainda.</p>'
-                totalValor.innerHTML = 'R$ 0,00' // + 0 pra ele nao bugar e ficar com o valor do ultimo item, ja que se dados for 0 é pq nao tem dado, entao valor e 0
-                qntd.innerHTML = 0 // definindo qntd igual a 0
+                totalValor.textContent = 'R$ 0,00' // + 0 pra ele nao bugar e ficar com o valor do ultimo item, ja que se dados for 0 é pq nao tem dado, entao valor e 0
+                qntd.textContent = 0 // definindo qntd igual a 0
             } else {
                 dados.forEach(function (gasto) { // se tiver dado inserido retorna com os dados que foram colocados
                     if (gasto.tipo == "SAIDA") {
@@ -116,7 +116,7 @@ function carregarGastos() {
                         sinal = "+";
                     }
 
-                    lista.innerHTML += `
+                    lista.textContent  += `
                         <div class="gasto-item" id="${gasto.id}">
                             <div class="gasto-emoji">${emoji}</div>
                             <div class="gasto-descricao">${gasto.descricao}</div>
@@ -133,8 +133,8 @@ function carregarGastos() {
                         </div>
                     `
                 })
-                qntd.innerHTML = dados.length //muda no html a qntd com o numero de dados dentro da variavel dados
-                totalValor.innerHTML = 'R$ ' + total.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) // mudar escrita do html para o total somado ali em cima
+                qntd.textContent  = dados.length //muda no html a qntd com o numero de dados dentro da variavel dados
+                totalValor.textContent  = 'R$ ' + total.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) // mudar escrita do html para o total somado ali em cima
             }
         })
 }
